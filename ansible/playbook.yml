@@ -1,0 +1,9 @@
+---
+- hosts: all
+
+        sudo: yes
+
+        tasks:
+        - user: name=ansible comment="ansible" group=admin
+        - name: Placing public key
+          authorized_key: user=ansible key="./pub-keys/ansible.pub"
