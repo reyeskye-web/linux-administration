@@ -1,9 +1,16 @@
 ---
 - hosts: all
+  remote_user: admin
+  sudo: yes
+  tasks:
+      - name: Add User 
+        user: name=ansible
+              group=admin
 
-        sudo: yes
-
-        tasks:
-        - user: name=ansible comment="ansible" group=admin
-        - name: Placing public key
-          authorized_key: user=ansible key="./pub-keys/ansible.pub"
+      - name: Adding keys to authorized_keys
+        authorized_key: user=ansible
+                        key="{{lookup('file', item)}}"
+                        path=/home/ansible/.ssh/authorized_keys
+                        state=present
+        with_fileglob:
+             - ./pub-keys/ansible.pub
